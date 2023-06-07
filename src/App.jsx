@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Modal from "./components/Modal";
 import ListadoGastos from "./components/ListadoGastos";
@@ -10,6 +10,18 @@ function App() {
   const [modal, setModal] = useState(false);
   const [animarModal, setAnimarModal] = useState(false);
   const [gastos, setGastos] = useState([]);
+  const [gastoEditar, setGastoEditar] = useState({});
+
+  useEffect(() => {
+    if (!Object.keys(gastoEditar).length > 0) {
+      return;
+    }
+    setModal(true);
+
+    setTimeout(() => {
+      setAnimarModal(true);
+    }, 300);
+  }, [gastoEditar]);
 
   const handleNuevoGasto = () => {
     setModal(true);
@@ -21,6 +33,7 @@ function App() {
 
   const guardarGasto = (gasto) => {
     gasto.fecha = Date.now();
+
     setGastos([...gastos, gasto]);
     setAnimarModal(false);
 
@@ -37,10 +50,18 @@ function App() {
           setPresupuesto={setPresupuesto}
           presupuestoValido={presupuestoValido}
           setPresupuestoValido={setPresupuestoValido}
+          gastos={gastos}
         />
         {presupuestoValido && (
           <>
-            <main>{gastos && <ListadoGastos gastos={gastos} />}</main>
+            <main>
+              {gastos && (
+                <ListadoGastos
+                  gastos={gastos}
+                  setGastoEditar={setGastoEditar}
+                />
+              )}
+            </main>
             <div className="nuevo-gasto">
               <img
                 src={nuevoGastoSvg}
@@ -58,6 +79,8 @@ function App() {
             setAnimarModal={setAnimarModal}
             guardarGasto={guardarGasto}
             setGastos={setGastos}
+            gastoEditar={gastoEditar}
+            setGastoEditar={setGastoEditar}
           />
         )}
       </div>

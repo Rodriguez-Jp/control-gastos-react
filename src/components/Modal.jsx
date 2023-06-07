@@ -1,12 +1,29 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import Alerta from "./Alerta";
 import cerrarModal from "../img/cerrar.svg";
 
-const Modal = ({ setModal, animarModal, setAnimarModal, guardarGasto }) => {
+const Modal = ({
+  setModal,
+  animarModal,
+  setAnimarModal,
+  guardarGasto,
+  gastoEditar,
+  setGastoEditar,
+}) => {
   const [nombreGasto, setNombreGasto] = useState("");
   const [cantidadGasto, setCantidadGasto] = useState(0);
   const [categoriaGasto, setCategoriaGasto] = useState("");
   const [alerta, setAlerta] = useState({});
+  const [estaEditando, setEstaEditando] = useState(false);
+
+  useEffect(() => {
+    if (Object.keys(gastoEditar).length > 0) {
+      setEstaEditando(true);
+      setNombreGasto(gastoEditar.nombreGasto);
+      setCantidadGasto(gastoEditar.cantidadGasto);
+      setCategoriaGasto(gastoEditar.categoriaGasto);
+    }
+  }, []);
 
   const generarId = () => {
     return crypto.randomUUID();
@@ -14,10 +31,15 @@ const Modal = ({ setModal, animarModal, setAnimarModal, guardarGasto }) => {
 
   const handleCerrarModal = () => {
     setAnimarModal(false);
+    if (estaEditando) {
+      setEstaEditando(false);
+    }
 
     setTimeout(() => {
       setModal(false);
     }, 500);
+
+    setGastoEditar({});
   };
 
   const handleSubmit = (e) => {
@@ -61,7 +83,11 @@ const Modal = ({ setModal, animarModal, setAnimarModal, guardarGasto }) => {
         className={`formulario ${animarModal ? "animar" : "cerrar"}`}
         onSubmit={handleSubmit}
       >
-        <legend>Nuevo gasto</legend>
+        {estaEditando ? (
+          <legend>Editar gasto</legend>
+        ) : (
+          <legend>Nuevo gasto</legend>
+        )}
 
         <div className="campo">
           <label htmlFor="nombre">Nombre Gasto:</label>
@@ -102,7 +128,10 @@ const Modal = ({ setModal, animarModal, setAnimarModal, guardarGasto }) => {
           </select>
         </div>
 
-        <input type="submit" value="Agregar gasto" />
+        <input
+          type="submit"
+          value={estaEditando ? "Editar gasto" : "Agregar Gasto"}
+        />
       </form>
       {msg && <Alerta alerta={alerta} />}
     </div>
