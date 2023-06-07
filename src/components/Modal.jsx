@@ -1,6 +1,6 @@
 import { useReducer, useState } from "react";
-import cerrarModal from "../img/cerrar.svg";
 import Alerta from "./Alerta";
+import cerrarModal from "../img/cerrar.svg";
 
 const Modal = ({ setModal, animarModal, setAnimarModal, guardarGasto }) => {
   const [nombreGasto, setNombreGasto] = useState("");
@@ -38,7 +38,6 @@ const Modal = ({ setModal, animarModal, setAnimarModal, guardarGasto }) => {
       return;
     }
 
-    console.log("Anadiendo gasto");
     guardarGasto({
       id: generarId(),
       nombreGasto,

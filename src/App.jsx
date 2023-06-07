@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Header from "./components/Header";
-import nuevoGastoSvg from "./img/nuevo-gasto.svg";
 import Modal from "./components/Modal";
+import ListadoGastos from "./components/ListadoGastos";
+import nuevoGastoSvg from "./img/nuevo-gasto.svg";
 
 function App() {
   const [presupuesto, setPresupuesto] = useState(0);
@@ -19,37 +20,47 @@ function App() {
   };
 
   const guardarGasto = (gasto) => {
-    console.log(gasto);
+    gasto.fecha = Date.now();
+    setGastos([...gastos, gasto]);
+    setAnimarModal(false);
+
+    setTimeout(() => {
+      setModal(false);
+    }, 500);
   };
 
   return (
     <>
-      <div>
+      <div className={modal ? "fijar" : ""}>
         <Header
           presupuesto={presupuesto}
           setPresupuesto={setPresupuesto}
           presupuestoValido={presupuestoValido}
           setPresupuestoValido={setPresupuestoValido}
         />
-      </div>
-      {presupuestoValido && (
-        <div className="nuevo-gasto">
-          <img
-            src={nuevoGastoSvg}
-            alt="icono de agregar"
-            onClick={handleNuevoGasto}
-          />
-        </div>
-      )}
+        {presupuestoValido && (
+          <>
+            <main>{gastos && <ListadoGastos gastos={gastos} />}</main>
+            <div className="nuevo-gasto">
+              <img
+                src={nuevoGastoSvg}
+                alt="icono de agregar"
+                onClick={handleNuevoGasto}
+              />
+            </div>
+          </>
+        )}
 
-      {modal && (
-        <Modal
-          setModal={setModal}
-          animarModal={animarModal}
-          setAnimarModal={setAnimarModal}
-          guardarGasto={guardarGasto}
-        />
-      )}
+        {modal && (
+          <Modal
+            setModal={setModal}
+            animarModal={animarModal}
+            setAnimarModal={setAnimarModal}
+            guardarGasto={guardarGasto}
+            setGastos={setGastos}
+          />
+        )}
+      </div>
     </>
   );
 }
