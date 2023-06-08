@@ -14,7 +14,7 @@ import IconoOcio from "../img/icono_ocio.svg";
 import IconoSalud from "../img/icono_salud.svg";
 import IconoSuscripciones from "../img/icono_suscripciones.svg";
 
-const Gasto = ({ gasto, setGastoEditar }) => {
+const Gasto = ({ gasto, setGastoEditar, eliminarGasto }) => {
   const diccionarioIconos = {
     ahorro: IconoAhorro,
     casa: IconoCasa,
@@ -25,7 +25,7 @@ const Gasto = ({ gasto, setGastoEditar }) => {
     suscripciones: IconoSuscripciones,
   };
 
-  const { nombreGasto, cantidadGasto, categoriaGasto, fecha } = gasto;
+  const { nombreGasto, cantidadGasto, categoriaGasto, fecha, id } = gasto;
 
   const formatearFecha = (fecha) => {
     const fechaNueva = new Date(fecha);
@@ -45,7 +45,7 @@ const Gasto = ({ gasto, setGastoEditar }) => {
 
   const trailingActions = () => (
     <TrailingActions>
-      <SwipeAction onClick={(e) => console.log("Eliminando")}>
+      <SwipeAction onClick={() => eliminarGasto(id)} destructive={true}>
         Eliminar
       </SwipeAction>
     </TrailingActions>

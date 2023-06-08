@@ -18,7 +18,6 @@ const NuevoPresupuesto = ({
 
     setAlerta({});
     setPresupuestoValido(true);
-    console.log("Enviando formulario");
   };
 
   const { msg } = alerta;

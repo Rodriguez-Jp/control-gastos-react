@@ -14,6 +14,8 @@ const Modal = ({
   const [cantidadGasto, setCantidadGasto] = useState(0);
   const [categoriaGasto, setCategoriaGasto] = useState("");
   const [alerta, setAlerta] = useState({});
+  const [id, setId] = useState("");
+  const [fecha, setFecha] = useState("");
   const [estaEditando, setEstaEditando] = useState(false);
 
   useEffect(() => {
@@ -22,21 +24,19 @@ const Modal = ({
       setNombreGasto(gastoEditar.nombreGasto);
       setCantidadGasto(gastoEditar.cantidadGasto);
       setCategoriaGasto(gastoEditar.categoriaGasto);
+      setId(gastoEditar.id);
+      setFecha(gastoEditar.fecha);
     }
   }, []);
 
-  const generarId = () => {
-    return crypto.randomUUID();
-  };
-
   const handleCerrarModal = () => {
     setAnimarModal(false);
-    if (estaEditando) {
-      setEstaEditando(false);
-    }
 
     setTimeout(() => {
       setModal(false);
+      if (estaEditando) {
+        setEstaEditando(false);
+      }
     }, 500);
 
     setGastoEditar({});
@@ -61,10 +61,11 @@ const Modal = ({
     }
 
     guardarGasto({
-      id: generarId(),
       nombreGasto,
       cantidadGasto,
       categoriaGasto,
+      id,
+      fecha,
     });
   };
 

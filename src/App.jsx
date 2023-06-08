@@ -23,6 +23,10 @@ function App() {
     }, 300);
   }, [gastoEditar]);
 
+  const generarId = () => {
+    return crypto.randomUUID();
+  };
+
   const handleNuevoGasto = () => {
     setModal(true);
 
@@ -32,14 +36,30 @@ function App() {
   };
 
   const guardarGasto = (gasto) => {
-    gasto.fecha = Date.now();
+    if (gasto.id) {
+      const gastosActualizados = gastos.map((gastoState) => {
+        return gastoState.id === gasto.id ? gasto : gastoState;
+      });
+      setGastos(gastosActualizados);
+      setGastoEditar({});
+    } else {
+      gasto.id = generarId();
+      gasto.fecha = Date.now();
+      setGastos([...gastos, gasto]);
+    }
 
-    setGastos([...gastos, gasto]);
     setAnimarModal(false);
 
     setTimeout(() => {
       setModal(false);
     }, 500);
+  };
+
+  const eliminarGasto = (id) => {
+    const gastosActualizados = gastos.filter(
+      (gastoState) => id !== gastoState.id
+    );
+    setGastos(gastosActualizados);
   };
 
   return (
@@ -59,6 +79,7 @@ function App() {
                 <ListadoGastos
                   gastos={gastos}
                   setGastoEditar={setGastoEditar}
+                  eliminarGasto={eliminarGasto}
                 />
               )}
             </main>
