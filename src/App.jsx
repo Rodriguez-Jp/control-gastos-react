@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Header from "./components/Header";
 import Modal from "./components/Modal";
 import ListadoGastos from "./components/ListadoGastos";
 import nuevoGastoSvg from "./img/nuevo-gasto.svg";
 
 function App() {
-  const [presupuesto, setPresupuesto] = useState(0);
+  const [presupuesto, setPresupuesto] = useState(
+    localStorage.getItem("presupuesto") ?? 0
+  );
   const [presupuestoValido, setPresupuestoValido] = useState(false);
   const [modal, setModal] = useState(false);
   const [animarModal, setAnimarModal] = useState(false);
-  const [gastos, setGastos] = useState([]);
+  const [gastos, setGastos] = useState(
+    localStorage.getItem("gastos")
+      ? JSON.parse(localStorage.getItem("gastos"))
+      : []
+  );
   const [gastoEditar, setGastoEditar] = useState({});
 
   useEffect(() => {
@@ -22,6 +28,25 @@ function App() {
       setAnimarModal(true);
     }, 300);
   }, [gastoEditar]);
+
+  useEffect(() => {
+    const getLS = () => {
+      const data = JSON.parse(localStorage.getItem("gastos")) ?? [];
+      if (presupuesto > 0) {
+        setPresupuestoValido(true);
+      }
+      setGastos(data);
+    };
+    getLS();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("gastos", JSON.stringify(gastos) ?? []);
+  }, [gastos]);
+
+  useEffect(() => {
+    localStorage.setItem("presupuesto", presupuesto ?? 0);
+  }, [presupuesto]);
 
   const generarId = () => {
     return crypto.randomUUID();
