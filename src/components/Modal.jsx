@@ -31,7 +31,6 @@ const Modal = ({
 
   const handleCerrarModal = () => {
     setAnimarModal(false);
-
     setTimeout(() => {
       setModal(false);
       if (estaEditando) {
