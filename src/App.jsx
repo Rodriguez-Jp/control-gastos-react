@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import Header from "./components/Header";
 import Modal from "./components/Modal";
+import Filtros from "./components/Filtros";
 import ListadoGastos from "./components/ListadoGastos";
 import nuevoGastoSvg from "./img/nuevo-gasto.svg";
 
@@ -101,11 +102,14 @@ function App() {
           <>
             <main>
               {gastos && (
-                <ListadoGastos
-                  gastos={gastos}
-                  setGastoEditar={setGastoEditar}
-                  eliminarGasto={eliminarGasto}
-                />
+                <>
+                  <Filtros />
+                  <ListadoGastos
+                    gastos={gastos}
+                    setGastoEditar={setGastoEditar}
+                    eliminarGasto={eliminarGasto}
+                  />
+                </>
               )}
             </main>
             <div className="nuevo-gasto">
