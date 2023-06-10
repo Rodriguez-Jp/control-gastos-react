@@ -18,6 +18,8 @@ function App() {
       : []
   );
   const [gastoEditar, setGastoEditar] = useState({});
+  const [filtro, setFiltro] = useState("");
+  const [gastosFiltrados, setGastosFiltrados] = useState({});
 
   useEffect(() => {
     if (!Object.keys(gastoEditar).length > 0) {
@@ -48,6 +50,14 @@ function App() {
   useEffect(() => {
     localStorage.setItem("presupuesto", presupuesto ?? 0);
   }, [presupuesto]);
+
+  useEffect(() => {
+    //Filtra la lista
+    const gastosFiltrados = gastos.filter(
+      (gasto) => gasto.categoriaGasto === filtro
+    );
+    setGastosFiltrados(gastosFiltrados);
+  }, [filtro]);
 
   const generarId = () => {
     return crypto.randomUUID();
@@ -97,17 +107,20 @@ function App() {
           presupuestoValido={presupuestoValido}
           setPresupuestoValido={setPresupuestoValido}
           gastos={gastos}
+          setGastos={setGastos}
         />
         {presupuestoValido && (
           <>
             <main>
               {gastos && (
                 <>
-                  <Filtros />
+                  <Filtros filtro={filtro} setFiltro={setFiltro} />
                   <ListadoGastos
                     gastos={gastos}
                     setGastoEditar={setGastoEditar}
                     eliminarGasto={eliminarGasto}
+                    filtro={filtro}
+                    gastosFiltrados={gastosFiltrados}
                   />
                 </>
               )}

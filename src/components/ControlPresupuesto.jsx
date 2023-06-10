@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-const ControlPresupuesto = ({ presupuesto, gastos }) => {
+const ControlPresupuesto = ({
+  presupuesto,
+  setPresupuesto,
+  gastos,
+  setGastos,
+  setPresupuestoValido,
+}) => {
   const [disponible, setDisponible] = useState(0);
   const [gastado, setGastado] = useState(0);
   const [porcentaje, setPorcentaje] = useState(0);
@@ -36,6 +42,16 @@ const ControlPresupuesto = ({ presupuesto, gastos }) => {
     setPorcentaje(porcentajeTotal.toFixed(2));
   };
 
+  const reiniciarApp = () => {
+    const confirmar = confirm("Esta seguro que desea resetear la app?");
+
+    if (confirmar) {
+      setGastos([]);
+      setPresupuesto(0);
+      setPresupuestoValido(false);
+    }
+  };
+
   return (
     <div className="contenedor-presupuesto contenedor sombra dos-columnas">
       <div>
@@ -43,16 +59,19 @@ const ControlPresupuesto = ({ presupuesto, gastos }) => {
           value={porcentaje}
           text={`${porcentaje}% Gastado`}
           styles={buildStyles({
-            pathColor: "#3b82f6",
-            textColor: "#3b82f6",
+            pathColor: porcentaje > 100 ? "#dc2626" : "#3b82f6",
+            textColor: porcentaje > 100 ? "#dc2626" : "#3b82f6",
           })}
         />
       </div>
       <div className="contenido-presupuesto">
+        <button className="reset-app" type="button" onClick={reiniciarApp}>
+          Resetear App
+        </button>
         <p>
           <span>Presupuesto: </span> {formatearPresupuesto(presupuesto)}
         </p>
-        <p>
+        <p className={disponible < 0 ? `negativo` : ""}>
           <span>Disponible: </span> {formatearPresupuesto(disponible)}
         </p>
         <p>
